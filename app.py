@@ -49,6 +49,24 @@ DEFAULT_USERS = [
         "locations": "Assembly",
         "is_active": 1,
     },
+    {
+        "name": "Ujjwal Rajpal",
+        "email": "ujjwal.rajpal@aequs.com",
+        "password": "ujjwal10R@",
+        "role": "Jr. Software Engineer",
+        "permission_level": "Admin",
+        "locations": "ALL",
+        "is_active": 1,
+    },
+    {
+        "name": "Jaysinh Chavda",
+        "email": "Jaysinh.Chavda@aequs.com",
+        "password": "jc-14724",
+        "role": "Management Trainee",
+        "permission_level": "Admin",
+        "locations": "ALL",
+        "is_active": 1,
+    },
 ]
 
 DEFAULT_TV_RECORDS = [
