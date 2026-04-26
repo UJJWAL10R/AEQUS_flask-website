@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Login | TV Status Command Center{% endblock %}
+{% block body_class %}auth-body{% endblock %}
+
+{% block content %}
+  <div class="app-shell auth-shell">
+    <div class="utility-row">
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle theme">
+        <i class="bi bi-moon-stars-fill theme-dark-icon"></i>
+        <i class="bi bi-brightness-high-fill theme-light-icon"></i>
+      </button>
+    </div>
+
+    <section class="login-layout reveal">
+      <div class="hero-stage panel-surface">
+        <div class="hero-media">
+          <img
+            src="{{ url_for('static', filename='images/aequs-login-bg.png') }}"
+            alt="AEQUS operations banner"
+          />
+        </div>
+        <div class="hero-media-overlay"></div>
+        <div class="hero-orbit hero-orbit-a"></div>
+        <div class="hero-orbit hero-orbit-b"></div>
+        <div class="brand-lockup">
+          <img
+            src="{{ url_for('static', filename='images/aequs-logo.png') }}"
+            alt="AEQUS logo"
+            class="brand-logo"
+          />
+          <div class="brand-text-block">
+            <span class="brand-title">AEQUS</span>
+            <small>Digital Display Reliability</small>
+          </div>
+        </div>
+        <p class="eyebrow hero-eyebrow">Operational Visibility</p>
+        <h1>Reliable control for every AEQUS display on the floor.</h1>
+        <p class="hero-copy">
+          Secure Flask dashboard with role-aware access, admin controls for TV health,
+          and a polished control-room experience in dark and light themes.
+        </p>
+
+        <div class="feature-pill-row">
+          <span><i class="bi bi-shield-check"></i> Admin controlled</span>
+          <span><i class="bi bi-grid"></i> KPI driven</span>
+          <span><i class="bi bi-stars"></i> Smooth transitions</span>
+        </div>
+      </div>
+
+      <div class="auth-card panel-surface reveal reveal-delay-1">
+        <div class="section-heading">
+          <p class="eyebrow">Sign In</p>
+          <h2>AEQUS TV Status Command Center</h2>
+          <p>Use a seeded demo account or create new users later from the admin console.</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flash-stack">
+              {% for category, message in messages %}
+                <div class="flash-banner {{ category }}">
+                  <i class="bi bi-exclamation-circle"></i>
+                  <span>{{ message }}</span>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <form method="post" class="auth-form">
+          <label class="field">
+            <span>Email</span>
+            <input type="email" name="email" placeholder="admin@tvstatus.local" required />
+          </label>
+
+          <label class="field">
+            <span>Password</span>
+            <input type="password" name="password" placeholder="Enter password" required />
+          </label>
+
+          <button type="submit" class="primary-btn w-100">Open dashboard</button>
+        </form>
+
+        <div class="credential-grid">
+          {% for demo in demo_users %}
+            <article class="credential-card">
+              <strong>{{ demo.name }}</strong>
+              <span>{{ demo.email }}</span>
+              <span>{{ demo.password }}</span>
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  </div>
+{% endblock %}

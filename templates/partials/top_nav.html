@@ -1,0 +1,44 @@
+<header class="shell-header reveal">
+  <div>
+    <div class="brand-lockup header-brand">
+      <img
+        src="{{ url_for('static', filename='images/aequs-logo.png') }}"
+        alt="AEQUS logo"
+        class="brand-logo"
+      />
+      <div class="brand-text-block">
+        <span class="brand-title">AEQUS</span>
+        {% if brand_subtitle %}
+          <small>{{ brand_subtitle }}</small>
+        {% endif %}
+      </div>
+    </div>
+    <p class="eyebrow">Broadcast Operations</p>
+    <h1>{{ page_title }}</h1>
+    <p class="header-copy">
+      {{ page_copy }}
+    </p>
+  </div>
+
+  <div class="header-actions">
+    <nav class="page-switcher">
+      <a href="{{ url_for('dashboard') }}" class="page-tab {% if active_page == 'dashboard' %}active{% endif %}">Dashboard</a>
+      <a href="{{ url_for('analytics') }}" class="page-tab {% if active_page == 'analytics' %}active{% endif %}">Analytics</a>
+    </nav>
+
+    <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle theme">
+      <i class="bi bi-moon-stars-fill theme-dark-icon"></i>
+      <i class="bi bi-brightness-high-fill theme-light-icon"></i>
+    </button>
+
+    <div class="identity-card">
+      <span class="eyebrow">Signed In</span>
+      <strong>{{ user.name }}</strong>
+      <span>{{ user.role }} &bull; {{ scope }}</span>
+    </div>
+
+    <form method="post" action="{{ url_for('logout') }}">
+      <button class="secondary-btn" type="submit">Logout</button>
+    </form>
+  </div>
+</header>

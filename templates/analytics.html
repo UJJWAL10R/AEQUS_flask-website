@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics | TV Status Command Center{% endblock %}
+
+{% block content %}
+  <div class="app-shell dashboard-shell">
+    {% with
+      page_title="AEQUS TV Analytics",
+      page_copy="Separate analytics workspace for AEQUS TV reliability, KPI breakdowns, connectivity trends, and content structure visibility.",
+      brand_subtitle="TV Insights",
+      active_page=active_page
+    %}
+      {% include "partials/top_nav.html" %}
+    {% endwith %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-stack reveal reveal-delay-1">
+          {% for category, message in messages %}
+            <div class="flash-banner {{ category }}">
+              <i class="bi bi-info-circle"></i>
+              <span>{{ message }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <section class="analytics-summary-row reveal reveal-delay-1">
+      <article class="panel-surface panel-block analytics-mini-card">
+        <span class="eyebrow">Visible TVs</span>
+        <strong>{{ dashboard_details.records }}</strong>
+        <p>Analytics follow the same scoped dataset as the operations dashboard.</p>
+      </article>
+      <article class="panel-surface panel-block analytics-mini-card">
+        <span class="eyebrow">Primary Content Type</span>
+        <strong>{{ dashboard_details.dominant_content }}</strong>
+        <p>Most common content structure visible in this AEQUS access scope.</p>
+      </article>
+      <article class="panel-surface panel-block analytics-mini-card">
+        <span class="eyebrow">Locations Covered</span>
+        <strong>{{ dashboard_details.unique_locations }}</strong>
+        <p>Area-wise distribution of visible TVs for the signed-in user.</p>
+      </article>
+    </section>
+
+    <section class="analytics-grid analytics-grid-compact reveal reveal-delay-2">
+      <article class="panel-surface panel-block analytics-card">
+        <div class="chart-header">
+          <div>
+            <p class="eyebrow">Status Mix</p>
+            <h3>TV health distribution</h3>
+          </div>
+          <span class="chart-note">Operational KPI snapshot</span>
+        </div>
+        <div class="chart-stage">
+          <canvas id="statusChart"></canvas>
+        </div>
+      </article>
+
+      <article class="panel-surface panel-block analytics-card">
+        <div class="chart-header">
+          <div>
+            <p class="eyebrow">Connectivity</p>
+            <h3>LAN and ping reliability</h3>
+          </div>
+          <span class="chart-note">Port response tracking</span>
+        </div>
+        <div class="chart-stage">
+          <canvas id="connectivityChart"></canvas>
+        </div>
+      </article>
+
+      <article class="panel-surface panel-block analytics-card">
+        <div class="chart-header">
+          <div>
+            <p class="eyebrow">Content Structure</p>
+            <h3>TV image and content type</h3>
+          </div>
+          <span class="chart-note">Defined data structure classes</span>
+        </div>
+        <div class="chart-stage">
+          <canvas id="contentTypeChart"></canvas>
+        </div>
+      </article>
+
+      <article class="panel-surface panel-block analytics-card">
+        <div class="chart-header">
+          <div>
+            <p class="eyebrow">Locations</p>
+            <h3>Screen distribution by area</h3>
+          </div>
+          <span class="chart-note">Visible scope only</span>
+        </div>
+        <div class="chart-stage">
+          <canvas id="locationChart"></canvas>
+        </div>
+      </article>
+
+      <article class="panel-surface panel-block analytics-card">
+        <div class="chart-header">
+          <div>
+            <p class="eyebrow">Layout Mix</p>
+            <h3>Composition footprint</h3>
+          </div>
+          <span class="chart-note">Layout structure across TVs</span>
+        </div>
+        <div class="chart-stage">
+          <canvas id="layoutChart"></canvas>
+        </div>
+      </article>
+
+      <article class="panel-surface panel-block analytics-card">
+        <div class="chart-header">
+          <div>
+            <p class="eyebrow">Governance</p>
+            <h3>AEQUS control rules</h3>
+          </div>
+        </div>
+        <div class="governance-list">
+          <article>
+            <strong>Role governed edits</strong>
+            <span>Only admin users can modify status, remarks, dates, users, and deployment metadata.</span>
+          </article>
+          <article>
+            <strong>Scoped visibility</strong>
+            <span>Operators and viewers only see records for their approved AEQUS locations.</span>
+          </article>
+          <article>
+            <strong>Data-backed charts</strong>
+            <span>Analytics render from live database records already visible in the current dashboard scope.</span>
+          </article>
+          <article>
+            <strong>Structured content reporting</strong>
+            <span>TV content is grouped into operational content classes so AEQUS teams can see what types of feeds dominate the network.</span>
+          </article>
+        </div>
+      </article>
+    </section>
+  </div>
+
+  <script id="analytics-data" type="application/json">{{ analytics | tojson }}</script>
+{% endblock %}

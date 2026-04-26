@@ -1,0 +1,76 @@
+<label class="field">
+  <span>TV ID</span>
+  <input type="text" name="tv_id" value="{{ record.tv_id if record is defined and record else '' }}" required />
+</label>
+
+<label class="field">
+  <span>Location</span>
+  <input type="text" name="location" value="{{ record.location if record is defined and record else '' }}" required />
+</label>
+
+<label class="field field-span-2">
+  <span>Content Name</span>
+  <input type="text" name="content_name" value="{{ record.content_name if record is defined and record else '' }}" required />
+</label>
+
+<label class="field">
+  <span>Template Type</span>
+  <input type="text" name="template_type" value="{{ record.template_type if record is defined and record else 'PICKCELL' }}" />
+</label>
+
+<label class="field">
+  <span>Layout Composition</span>
+  <input type="text" name="layout_composition" value="{{ record.layout_composition if record is defined and record else 'Full Screen' }}" />
+</label>
+
+<label class="field">
+  <span>Deployed Date</span>
+  <input type="text" name="deployed_date" value="{{ record.deployed_date if record is defined and record else '' }}" placeholder="25-Apr-2026" />
+</label>
+
+<label class="field">
+  <span>Deployed Time</span>
+  <input type="text" name="deployed_time" value="{{ record.deployed_time if record is defined and record else '' }}" placeholder="09:10 AM" />
+</label>
+
+<label class="field">
+  <span>TV Status</span>
+  <select name="tv_status">
+    {% for option in tv_status_options %}
+      <option value="{{ option }}" {% if record is defined and record and record.tv_status == option %}selected{% endif %}>{{ option }}</option>
+    {% endfor %}
+  </select>
+</label>
+
+<label class="field">
+  <span>Last Online</span>
+  <input type="text" name="last_online" value="{{ record.last_online if record is defined and record else '' }}" placeholder="Today" />
+</label>
+
+<label class="field">
+  <span>LAN Port Status</span>
+  <select name="ping_status">
+    {% for option in ping_status_options %}
+      <option value="{{ option }}" {% if record is defined and record and record.ping_status == option %}selected{% endif %}>{{ option }}</option>
+    {% endfor %}
+  </select>
+</label>
+
+<label class="field">
+  <span>Last Ping Time</span>
+  <input type="text" name="last_ping_time" value="{{ record.last_ping_time if record is defined and record else '' }}" placeholder="10:32 AM" />
+</label>
+
+<label class="field">
+  <span>Deployed Status</span>
+  <select name="deployed_status">
+    {% for option in deploy_status_options %}
+      <option value="{{ option }}" {% if record is defined and record and record.deployed_status == option %}selected{% endif %}>{{ option }}</option>
+    {% endfor %}
+  </select>
+</label>
+
+<label class="field field-span-2">
+  <span>Remarks</span>
+  <textarea name="remarks" rows="4" placeholder="Operational remarks">{{ record.remarks if record is defined and record else '' }}</textarea>
+</label>

@@ -1,0 +1,626 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | TV Status Command Center{% endblock %}
+
+{% macro badge(label, variant, icon) %}
+  <span class="status-chip {{ variant }}">
+    <span class="status-dot"></span>
+    <i class="bi {{ icon }}"></i>
+    {{ label }}
+  </span>
+{% endmacro %}
+
+{% block content %}
+  <div class="app-shell dashboard-shell">
+    {% with
+      page_title="AEQUS TV Status Command Center",
+      page_copy="Role-based TV visibility for operators, with full admin control over users and deployment health.",
+      brand_subtitle="Display Reliability",
+      active_page=active_page
+    %}
+      {% include "partials/top_nav.html" %}
+    {% endwith %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-stack reveal reveal-delay-1">
+          {% for category, message in messages %}
+            <div class="flash-banner {{ category }}">
+              <i class="bi bi-info-circle"></i>
+              <span>{{ message }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <section class="hero-grid reveal reveal-delay-1">
+      <article class="hero-panel panel-surface">
+        <div class="hero-kicker">
+          <span class="eyebrow">Live Control</span>
+          <span class="live-pulse"><i class="bi bi-broadcast"></i> Snapshot {{ snapshot_time }}</span>
+        </div>
+        <h2>Professional TV operations, with edit rights only where they belong.</h2>
+        <p>
+          Admins can create users, set role scope, and update TV status, ping state, remarks,
+          deployed date, and timing. Operators and viewers stay read-only.
+        </p>
+      </article>
+
+      <article class="summary-panel panel-surface">
+        <div class="summary-row">
+          <span>Access scope</span>
+          <strong>{{ scope }}</strong>
+        </div>
+        <div class="summary-row">
+          <span>Total users</span>
+          <strong>{{ total_users }}</strong>
+        </div>
+        <div class="summary-row">
+          <span>Active users</span>
+          <strong>{{ active_users }}</strong>
+        </div>
+        <div class="summary-row">
+          <span>Reliability mode</span>
+          <strong>AEQUS governed</strong>
+        </div>
+      </article>
+    </section>
+
+    <section class="kpi-grid reveal reveal-delay-2">
+      {% for kpi in kpis %}
+        <article class="metric-card panel-surface {{ kpi.class_name }}">
+          <div class="metric-head">
+            <span class="eyebrow">{{ kpi.label }}</span>
+            <i class="bi {{ kpi.icon }}"></i>
+          </div>
+          <div class="metric-value">{{ kpi.value }}</div>
+          <p>{{ kpi.meta }}</p>
+        </article>
+      {% endfor %}
+    </section>
+
+    <section class="detail-strip reveal reveal-delay-2">
+      <article class="detail-card panel-surface">
+        <div class="detail-card-head">
+          <span class="eyebrow">Deployment Health</span>
+          <strong>{{ dashboard_details.deployment_pct }}%</strong>
+        </div>
+        <p>{{ dashboard_details.deployed }} deployed, {{ dashboard_details.pending }} pending, {{ dashboard_details.failed }} failed.</p>
+        <div class="progress-track">
+          <span style="width: {{ dashboard_details.deployment_pct }}%"></span>
+        </div>
+      </article>
+      <article class="detail-card panel-surface">
+        <div class="detail-card-head">
+          <span class="eyebrow">Connectivity Health</span>
+          <strong>{{ dashboard_details.ping_health_pct }}%</strong>
+        </div>
+        <p>Ping reliability across {{ dashboard_details.records }} visible displays.</p>
+        <div class="progress-track success-track">
+          <span style="width: {{ dashboard_details.ping_health_pct }}%"></span>
+        </div>
+      </article>
+      <article class="detail-card panel-surface">
+        <div class="detail-card-head">
+          <span class="eyebrow">Content Mix</span>
+          <strong>{{ dashboard_details.dominant_content }}</strong>
+        </div>
+        <p>{{ dashboard_details.multi_layout }} multi-layout screens across {{ dashboard_details.unique_locations }} locations.</p>
+      </article>
+      <article class="detail-card panel-surface">
+        <div class="detail-card-head">
+          <span class="eyebrow">Attention Needed</span>
+          <strong>{{ dashboard_details.stale }}</strong>
+        </div>
+        <p>Displays not recently online and worth checking first.</p>
+      </article>
+    </section>
+
+    {% if spotlight %}
+      <section class="visual-grid reveal reveal-delay-2">
+        <article class="panel-surface panel-block tv-showcase-card">
+          <div class="panel-header compact-header">
+            <div>
+              <p class="eyebrow">TV Spotlight</p>
+              <h3 id="spotlightTvId">{{ spotlight.tv_id }}</h3>
+            </div>
+            <span class="chart-note" id="spotlightContentType">{{ spotlight_content_type }}</span>
+          </div>
+
+          <div class="spotlight-selector">
+            {% for record in rows %}
+              <button
+                type="button"
+                class="spotlight-chip {% if record.id == spotlight.id %}active{% endif %}"
+                data-spotlight-trigger
+                data-record-id="{{ record.id }}"
+              >
+                {{ record.tv_id }}
+              </button>
+            {% endfor %}
+          </div>
+
+          <div class="tv-showcase-frame">
+            <div class="tv-screen" id="tvSpotlightScreen" data-status="{{ spotlight.tv_status }}">
+              <div class="tv-screen-top">
+                <div>
+                  <span class="eyebrow">Location</span>
+                  <strong id="spotlightLocation">{{ spotlight.location }}</strong>
+                </div>
+                <span id="spotlightStatusWrap">{{ badge(spotlight.tv_status, spotlight.tv_status|lower, "bi-display") }}</span>
+              </div>
+
+              <div class="tv-data-grid">
+                <article class="tv-data-card-wide">
+                  <span>Content</span>
+                  <strong id="spotlightContentName">{{ spotlight.content_name }}</strong>
+                </article>
+                <article>
+                  <span>Template</span>
+                  <strong id="spotlightTemplate">{{ spotlight.template_type }}</strong>
+                </article>
+                <article>
+                  <span>Layout</span>
+                  <strong id="spotlightLayout">{{ spotlight.layout_composition }}</strong>
+                </article>
+                <article>
+                  <span>Deploy</span>
+                  <strong id="spotlightDeploy">{{ spotlight.deployed_status }}</strong>
+                </article>
+                <article>
+                  <span>Ping</span>
+                  <strong id="spotlightPing">{{ spotlight.ping_status }}</strong>
+                </article>
+                <article>
+                  <span>Last Ping</span>
+                  <strong id="spotlightLastPing">{{ spotlight.last_ping_time }}</strong>
+                </article>
+              </div>
+            </div>
+            <div class="tv-stand"></div>
+          </div>
+        </article>
+
+        <article class="panel-surface panel-block insight-stack-card">
+          <div class="panel-header compact-header">
+            <div>
+              <p class="eyebrow">Operational Signals</p>
+              <h3>Live AEQUS insights</h3>
+            </div>
+          </div>
+
+          <div class="insight-grid">
+            <article class="insight-pill">
+              <span class="eyebrow">Status</span>
+              <strong id="spotlightStatusText">{{ spotlight.tv_status }}</strong>
+              <p id="spotlightLastOnline">{{ spotlight.last_online }} last online state.</p>
+            </article>
+            <article class="insight-pill">
+              <span class="eyebrow">Deployment</span>
+              <strong id="spotlightDeployDate">{{ spotlight.deployed_date }}</strong>
+              <p id="spotlightDeployTime">{{ spotlight.deployed_time }} deployment timestamp.</p>
+            </article>
+            <article class="insight-pill">
+              <span class="eyebrow">Remarks</span>
+              <strong>Ops note</strong>
+              <p id="spotlightRemarks">{{ spotlight.remarks }}</p>
+            </article>
+            <article class="insight-pill">
+              <span class="eyebrow">Governance</span>
+              <strong>Admin locked</strong>
+              <p>Only admins can edit values, users, TV state, and connectivity records.</p>
+            </article>
+          </div>
+        </article>
+      </section>
+    {% endif %}
+
+    <section class="panel-surface panel-block reveal reveal-delay-2">
+      <div class="panel-header tab-header">
+        <div>
+          <p class="eyebrow">Workspace</p>
+          <h3>Operations dashboard</h3>
+        </div>
+        <div class="page-tab-inline">
+          <a href="{{ url_for('analytics') }}" class="secondary-btn">Open analytics workspace</a>
+        </div>
+      </div>
+      <section class="content-grid">
+            <div class="main-column">
+              <section class="panel-surface panel-block panel-nested reveal reveal-delay-2">
+                <div class="panel-header">
+                  <div>
+                    <p class="eyebrow">TV Inventory</p>
+                    <h3>Deployment status board</h3>
+                  </div>
+
+                  <form method="get" class="toolbar">
+                    <label class="field compact-field">
+                      <span>Search</span>
+                      <input name="search" type="search" value="{{ search }}" placeholder="TV, location, content, remarks" />
+                    </label>
+
+                    <label class="field compact-field">
+                      <span>Status</span>
+                      <select name="status">
+                        <option value="all" {% if status == "all" %}selected{% endif %}>All</option>
+                        <option value="online" {% if status == "online" %}selected{% endif %}>Online</option>
+                        <option value="offline" {% if status == "offline" %}selected{% endif %}>Offline</option>
+                        <option value="maintenance" {% if status == "maintenance" %}selected{% endif %}>Maintenance</option>
+                      </select>
+                    </label>
+
+                    <button type="submit" class="secondary-btn">Apply</button>
+                    {% if user.is_admin %}
+                      <button type="button" class="primary-btn" data-bs-toggle="modal" data-bs-target="#createTvModal">
+                        Add TV
+                      </button>
+                    {% endif %}
+                  </form>
+                </div>
+
+                <div class="table-shell">
+                  <table class="status-table">
+                    <thead>
+                      <tr>
+                        <th>TV</th>
+                        <th>Location</th>
+                        <th>Content</th>
+                        <th>Layout</th>
+                        <th>Deployed</th>
+                        <th>Status</th>
+                        <th>Last Online</th>
+                        <th>LAN Ping</th>
+                        <th>Deploy State</th>
+                        <th>Remarks</th>
+                        <th>Updated</th>
+                        {% if user.is_admin %}<th>Actions</th>{% endif %}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% if rows %}
+                        {% for record in rows %}
+                          <tr class="reveal-row">
+                            <td>
+                              <div class="tv-cell">
+                                <strong>{{ record.tv_id }}</strong>
+                                <span>{{ record.template_type }}</span>
+                              </div>
+                            </td>
+                            <td>{{ record.location }}</td>
+                            <td>
+                              <div class="tv-cell">
+                                <strong>{{ record.content_name }}</strong>
+                                <span>{{ record.layout_composition }}</span>
+                              </div>
+                            </td>
+                            <td>
+                              <div class="tv-cell">
+                                <strong>{{ record.deployed_date }}</strong>
+                                <span>{{ record.deployed_time }}</span>
+                              </div>
+                            </td>
+                            <td>{{ badge(record.tv_status, record.tv_status|lower, "bi-display") }}</td>
+                            <td>{{ record.last_online }}</td>
+                            <td>
+                              <div class="tv-cell">
+                                {{ badge(record.ping_status, "ping", "bi-ethernet") }}
+                                <span>{{ record.last_ping_time }}</span>
+                              </div>
+                            </td>
+                            <td>{{ badge(record.deployed_status, "deploy", "bi-rocket-takeoff") }}</td>
+                            <td class="remarks-cell">{{ record.remarks }}</td>
+                            <td>
+                              <div class="tv-cell">
+                                <strong>{{ record.updated_at }}</strong>
+                                <span>{{ record.updated_by or "System" }}</span>
+                              </div>
+                            </td>
+                            {% if user.is_admin %}
+                              <td>
+                                <button
+                                  type="button"
+                                  class="table-action"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#editTvModal{{ record.id }}"
+                                >
+                                  Edit
+                                </button>
+                              </td>
+                            {% endif %}
+                          </tr>
+                        {% endfor %}
+                      {% else %}
+                        <tr>
+                          <td colspan="{% if user.is_admin %}12{% else %}11{% endif %}" class="empty-state">
+                            No TV records match the current search or access scope.
+                          </td>
+                        </tr>
+                      {% endif %}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            </div>
+
+            {% if user.is_admin %}
+              <aside class="side-column">
+                <section class="panel-surface panel-block panel-nested reveal reveal-delay-3">
+                  <div class="panel-header stacked">
+                    <div>
+                      <p class="eyebrow">User Control</p>
+                      <h3>Admin actions</h3>
+                    </div>
+                    <button type="button" class="primary-btn" data-bs-toggle="modal" data-bs-target="#createUserModal">
+                      Add User
+                    </button>
+                  </div>
+
+                  <div class="admin-stat-grid">
+                    <article class="mini-stat">
+                      <span>Admin access</span>
+                      <strong>{{ users | selectattr("permission_level", "equalto", "Admin") | list | length }}</strong>
+                    </article>
+                    <article class="mini-stat">
+                      <span>Operator access</span>
+                      <strong>{{ users | selectattr("permission_level", "equalto", "Operator") | list | length }}</strong>
+                    </article>
+                    <article class="mini-stat">
+                      <span>Viewer access</span>
+                      <strong>{{ users | selectattr("permission_level", "equalto", "Viewer") | list | length }}</strong>
+                    </article>
+                  </div>
+
+                  <div class="user-list">
+                    {% for managed_user in users %}
+                      <article class="user-card">
+                        <div>
+                          <strong>{{ managed_user.name }}</strong>
+                          <span>{{ managed_user.email }}</span>
+                        </div>
+                        <div class="user-meta">
+                          <span>{{ managed_user.role }}</span>
+                          <span>{{ managed_user.permission_level }} access</span>
+                          <span>{{ managed_user.scope_label }}</span>
+                          <span>{{ "Active" if managed_user.is_active else "Disabled" }}</span>
+                        </div>
+                        <button
+                          type="button"
+                          class="table-action"
+                          data-bs-toggle="modal"
+                          data-bs-target="#editUserModal{{ managed_user.id }}"
+                        >
+                          Manage
+                        </button>
+                      </article>
+                    {% endfor %}
+                  </div>
+                </section>
+              </aside>
+            {% endif %}
+          </section>
+    </section>
+  </div>
+
+  <script id="spotlight-data" type="application/json">
+    [
+      {% for record in rows %}
+        {
+          "id": {{ record.id }},
+          "tv_id": {{ record.tv_id | tojson }},
+          "location": {{ record.location | tojson }},
+          "content_name": {{ record.content_name | tojson }},
+          "template_type": {{ record.template_type | tojson }},
+          "layout_composition": {{ record.layout_composition | tojson }},
+          "deployed_status": {{ record.deployed_status | tojson }},
+          "ping_status": {{ record.ping_status | tojson }},
+          "last_ping_time": {{ record.last_ping_time | tojson }},
+          "tv_status": {{ record.tv_status | tojson }},
+          "last_online": {{ record.last_online | tojson }},
+          "deployed_date": {{ record.deployed_date | tojson }},
+          "deployed_time": {{ record.deployed_time | tojson }},
+          "remarks": {{ record.remarks | tojson }},
+          "content_type": {{ detect_content_type(record) | tojson }}
+        }{% if not loop.last %},{% endif %}
+      {% endfor %}
+    ]
+  </script>
+
+  {% if user.is_admin %}
+    <div class="modal fade" id="createUserModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content app-modal">
+          <div class="modal-header">
+            <div>
+              <p class="eyebrow">Admin</p>
+              <h5 class="modal-title">Create user</h5>
+            </div>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <form method="post" action="{{ url_for('create_user') }}">
+            <div class="modal-body form-grid">
+              <label class="field">
+                <span>Name</span>
+                <input type="text" name="name" required />
+              </label>
+              <label class="field">
+                <span>Email</span>
+                <input type="email" name="email" required />
+              </label>
+              <label class="field">
+                <span>Password</span>
+                <input type="text" name="password" required />
+              </label>
+              <label class="field">
+                <span>Permission level</span>
+                <select name="permission_level">
+                  {% for level in permission_level_options %}
+                    <option value="{{ level }}">{{ level }}</option>
+                  {% endfor %}
+                </select>
+              </label>
+              <label class="field">
+                <span>Custom role name</span>
+                <input type="text" name="custom_role" placeholder="Example: Production Analyst" />
+              </label>
+
+              <div class="field field-span-2">
+                <span>Location access</span>
+                <div class="checkbox-grid">
+                  {% for location in locations %}
+                    <label class="check-pill">
+                      <input type="checkbox" name="locations" value="{{ location }}" />
+                      <span>{{ location }}</span>
+                    </label>
+                  {% endfor %}
+                  <label class="check-pill all-scope-pill">
+                    <input type="checkbox" name="all_locations" />
+                    <span>All locations</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="secondary-btn" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="primary-btn">Create user</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    {% for managed_user in users %}
+      <div class="modal fade" id="editUserModal{{ managed_user.id }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content app-modal">
+            <div class="modal-header">
+              <div>
+                <p class="eyebrow">User Access</p>
+                <h5 class="modal-title">{{ managed_user.name }}</h5>
+              </div>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" action="{{ url_for('update_user', user_id=managed_user.id) }}">
+              <div class="modal-body form-grid">
+                <label class="field">
+                  <span>Name</span>
+                  <input type="text" name="name" value="{{ managed_user.name }}" required />
+                </label>
+                <label class="field">
+                  <span>Email</span>
+                  <input type="email" value="{{ managed_user.email }}" disabled />
+                </label>
+                <label class="field">
+                  <span>New password</span>
+                  <input type="text" name="password" placeholder="Leave blank to keep current" />
+                </label>
+                <label class="field">
+                  <span>Permission level</span>
+                  <select name="permission_level">
+                    {% for level in permission_level_options %}
+                      <option value="{{ level }}" {% if managed_user.permission_level == level %}selected{% endif %}>{{ level }}</option>
+                    {% endfor %}
+                  </select>
+                </label>
+                <label class="field">
+                  <span>Custom role name</span>
+                  <input
+                    type="text"
+                    name="custom_role"
+                    value="{% if managed_user.role not in permission_level_options %}{{ managed_user.role }}{% endif %}"
+                    placeholder="Example: Production Analyst"
+                  />
+                </label>
+
+                <div class="field field-span-2">
+                  <span>Location access</span>
+                  <div class="checkbox-grid">
+                    {% for location in locations %}
+                      <label class="check-pill">
+                        <input
+                          type="checkbox"
+                          name="locations"
+                          value="{{ location }}"
+                          {% if location in managed_user.locations_list %}checked{% endif %}
+                        />
+                        <span>{{ location }}</span>
+                      </label>
+                    {% endfor %}
+                    <label class="check-pill all-scope-pill">
+                      <input
+                        type="checkbox"
+                        name="all_locations"
+                        {% if "ALL" in managed_user.locations_list %}checked{% endif %}
+                      />
+                      <span>All locations</span>
+                    </label>
+                  </div>
+                </div>
+
+                <label class="check-pill toggle-pill">
+                  <input type="checkbox" name="is_active" {% if managed_user.is_active %}checked{% endif %} />
+                  <span>Keep this user active</span>
+                </label>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="secondary-btn" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="primary-btn">Save user</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+    <div class="modal fade" id="createTvModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content app-modal">
+          <div class="modal-header">
+            <div>
+              <p class="eyebrow">TV Inventory</p>
+              <h5 class="modal-title">Add TV record</h5>
+            </div>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <form method="post" action="{{ url_for('create_tv') }}">
+            <div class="modal-body form-grid">
+              {% include "partials/tv_form_fields.html" %}
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="secondary-btn" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="primary-btn">Create TV</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    {% for record in all_records %}
+      <div class="modal fade" id="editTvModal{{ record.id }}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content app-modal">
+            <div class="modal-header">
+              <div>
+                <p class="eyebrow">TV Update</p>
+                <h5 class="modal-title">{{ record.tv_id }}</h5>
+              </div>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post" action="{{ url_for('update_tv', record_id=record.id) }}">
+              <div class="modal-body form-grid">
+                {% with record=record %}
+                  {% include "partials/tv_form_fields.html" %}
+                {% endwith %}
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="secondary-btn" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="primary-btn">Save changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endblock %}
