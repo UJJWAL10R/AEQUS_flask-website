@@ -67,6 +67,15 @@ DEFAULT_USERS = [
         "locations": "ALL",
         "is_active": 1,
     },
+    {
+        "name": "Mohita Chandiramani",
+        "email": "Mohita.Chandiramani@aequs.com",
+        "password": "15374",
+        "role": "Manager",
+        "permission_level": "Admin",
+        "locations": "ALL",
+        "is_active": 1,
+    },
 ]
 
 DEFAULT_TV_RECORDS = [
