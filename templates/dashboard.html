@@ -211,6 +211,25 @@
               <strong>Admin locked</strong>
               <p>Only admins can edit values, users, TV state, and connectivity records.</p>
             </article>
+            <article class="insight-pill insight-pill-wide">
+              <span class="eyebrow">Assigned Reports</span>
+              <strong>Power BI mapping</strong>
+              <div class="spotlight-report-list" id="spotlightReports">
+                {% if spotlight_reports %}
+                  {% for report in spotlight_reports %}
+                    <a
+                      class="mini-report-link"
+                      href="{{ url_for('powerbi', tv=spotlight.id, report=report.id) }}"
+                    >
+                      {{ report.name }}
+                      <small>{{ report.category }}</small>
+                    </a>
+                  {% endfor %}
+                {% else %}
+                  <p class="subtle-note">No report assigned to this TV yet.</p>
+                {% endif %}
+              </div>
+            </article>
           </div>
         </article>
       </section>
@@ -421,7 +440,8 @@
           "deployed_date": {{ record.deployed_date | tojson }},
           "deployed_time": {{ record.deployed_time | tojson }},
           "remarks": {{ record.remarks | tojson }},
-          "content_type": {{ detect_content_type(record) | tojson }}
+          "content_type": {{ detect_content_type(record) | tojson }},
+          "reports": {{ reports_by_tv.get(record.id, []) | tojson }}
         }{% if not loop.last %},{% endif %}
       {% endfor %}
     ]
@@ -586,6 +606,17 @@
           <form method="post" action="{{ url_for('create_tv') }}">
             <div class="modal-body form-grid">
               {% include "partials/tv_form_fields.html" %}
+              <div class="field field-span-2">
+                <span>Assigned Power BI reports</span>
+                <div class="checkbox-grid">
+                  {% for report in powerbi_reports %}
+                    <label class="check-pill">
+                      <input type="checkbox" name="report_ids" value="{{ report.id }}" />
+                      <span>{{ report.name }} <small>{{ report.category }}</small></span>
+                    </label>
+                  {% endfor %}
+                </div>
+              </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="secondary-btn" data-bs-dismiss="modal">Cancel</button>
@@ -612,6 +643,23 @@
                 {% with record=record %}
                   {% include "partials/tv_form_fields.html" %}
                 {% endwith %}
+                <div class="field field-span-2">
+                  <span>Assigned Power BI reports</span>
+                  <div class="checkbox-grid">
+                    {% set assigned_ids = reports_by_tv.get(record.id, []) | map(attribute='id') | list %}
+                    {% for report in powerbi_reports %}
+                      <label class="check-pill">
+                        <input
+                          type="checkbox"
+                          name="report_ids"
+                          value="{{ report.id }}"
+                          {% if report.id in assigned_ids %}checked{% endif %}
+                        />
+                        <span>{{ report.name }} <small>{{ report.category }}</small></span>
+                      </label>
+                    {% endfor %}
+                  </div>
+                </div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="secondary-btn" data-bs-dismiss="modal">Close</button>

@@ -24,6 +24,7 @@
     <nav class="page-switcher">
       <a href="{{ url_for('dashboard') }}" class="page-tab {% if active_page == 'dashboard' %}active{% endif %}">Dashboard</a>
       <a href="{{ url_for('analytics') }}" class="page-tab {% if active_page == 'analytics' %}active{% endif %}">Analytics</a>
+      <a href="{{ url_for('powerbi') }}" class="page-tab {% if active_page == 'powerbi' %}active{% endif %}">Power BI</a>
     </nav>
 
     <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle theme">

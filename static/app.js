@@ -201,7 +201,27 @@
       deployDate: document.getElementById("spotlightDeployDate"),
       deployTime: document.getElementById("spotlightDeployTime"),
       remarks: document.getElementById("spotlightRemarks"),
+      reports: document.getElementById("spotlightReports"),
     };
+
+    function renderReports(record) {
+      if (!refs.reports) return;
+      const reports = Array.isArray(record.reports) ? record.reports : [];
+      if (!reports.length) {
+        refs.reports.innerHTML = `<p class="subtle-note">No report assigned to this TV yet.</p>`;
+        return;
+      }
+      refs.reports.innerHTML = reports
+        .map(
+          (report) => `
+            <a class="mini-report-link" href="/powerbi?tv=${record.id}&report=${report.id}">
+              ${report.name}
+              <small>${report.category}</small>
+            </a>
+          `
+        )
+        .join("");
+    }
 
     function setActive(recordId) {
       const record = byId.get(String(recordId));
@@ -229,6 +249,7 @@
       refs.deployDate.textContent = record.deployed_date;
       refs.deployTime.textContent = `${record.deployed_time} deployment timestamp.`;
       refs.remarks.textContent = record.remarks;
+      renderReports(record);
 
       triggers.forEach((trigger) => {
         trigger.classList.toggle("active", trigger.dataset.recordId === String(recordId));

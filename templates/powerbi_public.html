@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}AEQUS Power BI Public View{% endblock %}
+
+{% block content %}
+  <div class="app-shell dashboard-shell">
+    <section class="detail-strip reveal reveal-delay-1">
+      <article class="detail-card panel-surface">
+        <div class="detail-card-head">
+          <span class="eyebrow">AEQUS</span>
+          <strong>Public Power BI view</strong>
+        </div>
+        <p>This route can be shared only for Power BI content that is safe for internet-wide access.</p>
+      </article>
+      <article class="detail-card panel-surface">
+        <div class="detail-card-head">
+          <span class="eyebrow">Mapped TVs</span>
+          <strong>{{ grouped_reports | selectattr("reports") | list | length }}</strong>
+        </div>
+        <p>Each TV can expose the specific report collection assigned to its deployed content.</p>
+      </article>
+    </section>
+
+    <section class="content-grid reveal reveal-delay-2">
+      <aside class="side-column">
+        <section class="panel-surface panel-block panel-nested">
+          <div class="panel-header stacked">
+            <div>
+              <p class="eyebrow">TV Mapping</p>
+              <h3>Public report access</h3>
+            </div>
+          </div>
+
+          <div class="user-list">
+            {% for group in grouped_reports %}
+              <article class="user-card">
+                <div>
+                  <strong>{{ group.tv.tv_id }}</strong>
+                  <span>{{ group.tv.location }}</span>
+                </div>
+
+                {% if group.reports %}
+                  <div class="report-link-stack">
+                    {% for report in group.reports %}
+                      <a
+                        href="{{ url_for('powerbi_public', tv=group.tv.id, report=report.id) }}"
+                        class="report-link {% if selected_tv_id == group.tv.id and selected_report_id == report.id %}active{% endif %}"
+                      >
+                        {{ report.name }}
+                        <small>{{ report.category }}</small>
+                      </a>
+                    {% endfor %}
+                  </div>
+                {% else %}
+                  <p class="subtle-note">No public report assigned yet.</p>
+                {% endif %}
+              </article>
+            {% endfor %}
+          </div>
+        </section>
+      </aside>
+
+      <div class="main-column">
+        <section class="panel-surface panel-block powerbi-shell">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Embedded Report</p>
+              <h3>{{ selected_report_name or "Public Power BI content" }}</h3>
+            </div>
+          </div>
+
+          {% if selected_embed %}
+            <div class="powerbi-frame-wrap">
+              <iframe
+                src="{{ selected_embed }}"
+                title="{{ selected_report_name or 'AEQUS Power BI public report' }}"
+                class="powerbi-frame"
+                loading="lazy"
+                allowfullscreen
+              ></iframe>
+            </div>
+          {% elif powerbi_embed_url %}
+            <div class="powerbi-frame-wrap">
+              <iframe
+                src="{{ powerbi_embed_url }}"
+                title="AEQUS Power BI public fallback report"
+                class="powerbi-frame"
+                loading="lazy"
+                allowfullscreen
+              ></iframe>
+            </div>
+          {% else %}
+            <div class="empty-state">
+              No public Power BI report has been configured yet.
+            </div>
+          {% endif %}
+        </section>
+      </div>
+    </section>
+  </div>
+{% endblock %}
