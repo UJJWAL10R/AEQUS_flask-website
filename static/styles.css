@@ -137,7 +137,7 @@ body::before {
 
 .live-background-scan {
   background:
-    linear-gradient(180deg, transparent 0%, rgba(99, 168, 255, 0.024) 50%, transparent 100%);
+    linear-gradient(180deg, transparent 0%, rgba(84, 150, 255, 0.03) 50%, transparent 100%);
   transform: translateY(-100%);
   animation: liveScan 20s linear infinite;
   opacity: 0.28;

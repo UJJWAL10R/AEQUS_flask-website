@@ -224,6 +224,15 @@
     let height = 0;
     let animationId = null;
 
+    function livePalette(palette) {
+      return {
+        primary: palette.accent,
+        secondary: "#7aa2ff",
+        tertiary: "#4f7cff",
+        line: normalizeColor(palette.accent, 0.08),
+      };
+    }
+
     function buildPoints() {
       points.length = 0;
       const targetCount = prefersReducedMotion
@@ -254,7 +263,7 @@
       buildPoints();
     }
 
-    function drawConnections(palette) {
+    function drawConnections(colors) {
       for (let i = 0; i < points.length; i += 1) {
         for (let j = i + 1; j < points.length; j += 1) {
           const a = points[i];
@@ -264,7 +273,7 @@
           const distance = Math.sqrt(dx * dx + dy * dy);
           if (distance > 160) continue;
           const alpha = (1 - distance / 160) * 0.08;
-          context.strokeStyle = palette.line.replace(")", `, ${alpha})`).replace("rgb", "rgba");
+          context.strokeStyle = normalizeColor(colors.primary, alpha);
           context.lineWidth = 1;
           context.beginPath();
           context.moveTo(a.x, a.y);
@@ -286,16 +295,17 @@
 
     function animate() {
       const palette = themePalette();
+      const colors = livePalette(palette);
       context.clearRect(0, 0, width, height);
 
       const glowGradient = context.createLinearGradient(0, 0, width, height);
-      glowGradient.addColorStop(0, normalizeColor(palette.accent, 0.08));
-      glowGradient.addColorStop(0.5, normalizeColor(palette.accent2, 0.04));
-      glowGradient.addColorStop(1, normalizeColor(palette.warning, 0.04));
+      glowGradient.addColorStop(0, normalizeColor(colors.primary, 0.08));
+      glowGradient.addColorStop(0.5, normalizeColor(colors.secondary, 0.045));
+      glowGradient.addColorStop(1, normalizeColor(colors.tertiary, 0.04));
       context.fillStyle = glowGradient;
       context.fillRect(0, 0, width, height);
 
-      drawConnections(palette);
+      drawConnections(colors);
 
       points.forEach((point, index) => {
         point.x += point.vx;
@@ -307,14 +317,14 @@
 
         const radius = point.radius + Math.sin(point.pulse) * 0.7;
         const halo = context.createRadialGradient(point.x, point.y, 0, point.x, point.y, radius * 8);
-        halo.addColorStop(0, normalizeColor(index % 3 === 0 ? palette.accent : palette.accent2, 0.12));
+        halo.addColorStop(0, normalizeColor(index % 3 === 0 ? colors.primary : colors.secondary, 0.12));
         halo.addColorStop(1, "rgba(0, 0, 0, 0)");
         context.fillStyle = halo;
         context.beginPath();
         context.arc(point.x, point.y, radius * 8, 0, Math.PI * 2);
         context.fill();
 
-        context.fillStyle = index % 2 === 0 ? palette.accent : palette.accent2;
+        context.fillStyle = index % 2 === 0 ? colors.primary : colors.secondary;
         context.beginPath();
         context.arc(point.x, point.y, Math.max(1.2, radius), 0, Math.PI * 2);
         context.fill();
