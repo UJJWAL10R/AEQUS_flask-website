@@ -143,50 +143,71 @@ DEFAULT_TV_RECORDS = [
 
 DEFAULT_POWERBI_REPORTS = [
     {
-        "name": "Ano Dashboard 105 Application",
-        "url": "https://app.powerbi.com/groups/07228872-ff92-42d9-ab91-1116ce17b076/reports/a3530cdb-548b-45d5-a1b8-2747c4f4ba26/4cfea5d3771eeb47ab10?experience=power-bi&clientSideAuth=0",
+        "name": "Ano_105",
+        "url": "https://app.powerbi.com/reportEmbed?reportId=a3530cdb-548b-45d5-a1b8-2747c4f4ba26&autoAuth=true&ctid=0e0f5bfc-3e6d-414f-8e75-abead7e01789",
         "category": "ANO",
     },
     {
-        "name": "Ano Dashboard 106",
-        "url": "https://app.powerbi.com/groups/07228872-ff92-42d9-ab91-1116ce17b076/reports/80a1cd94-2f47-413f-82b1-0925b041fac6/5120bdcaab3f36cf94de?experience=power-bi&clientSideAuth=0",
+        "name": "Ano_106",
+        "url": "https://app.powerbi.com/reportEmbed?reportId=80a1cd94-2f47-413f-82b1-0925b041fac6&autoAuth=true&ctid=0e0f5bfc-3e6d-414f-8e75-abead7e01789",
         "category": "ANO",
     },
     {
-        "name": "Ano Dashboard 107 Application (Wet Lab Trend Charts)",
-        "url": "https://app.powerbi.com/groups/07228872-ff92-42d9-ab91-1116ce17b076/reports/b9fddd4d-e63d-408c-9317-8ad0730ad937/bdab09556340317bada0?experience=power-bi&clientSideAuth=0",
+        "name": "Ano_107",
+        "url": "https://app.powerbi.com/reportEmbed?reportId=66a36cb3-e143-4749-ad6f-76d38e946390&autoAuth=true&ctid=0e0f5bfc-3e6d-414f-8e75-abead7e01789",
         "category": "ANO",
     },
     {
-        "name": "Ano Live SCADA Temperature",
-        "url": "https://app.powerbi.com/groups/07228872-ff92-42d9-ab91-1116ce17b076/reports/853d542c-b72f-4d36-aa28-45223f1f9bd4/72b441b7a5f19cf346a9?experience=power-bi&clientSideAuth=0",
+        "name": "Ano_Temperature",
+        "url": "https://app.powerbi.com/reportEmbed?reportId=853d542c-b72f-4d36-aa28-45223f1f9bd4&autoAuth=true&ctid=0e0f5bfc-3e6d-414f-8e75-abead7e01789",
         "category": "SCADA",
     },
     {
-        "name": "KPIV Dashboard",
-        "url": "https://app.powerbi.com/groups/07228872-ff92-42d9-ab91-1116ce17b076/reports/13431330-2de8-4726-9930-12f11e8509e6/b6cf6b04699c30656495?experience=power-bi&clientSideAuth=0",
+        "name": "Wet_Lab_Trends",
+        "url": "https://app.powerbi.com/reportEmbed?reportId=b9fddd4d-e63d-408c-9317-8ad0730ad937&autoAuth=true&ctid=0e0f5bfc-3e6d-414f-8e75-abead7e01789",
+        "category": "ANO",
+    },
+    {
+        "name": "KPIV_Dash",
+        "url": "https://app.powerbi.com/reportEmbed?reportId=13431330-2de8-4726-9930-12f11e8509e6&autoAuth=true&ctid=0e0f5bfc-3e6d-414f-8e75-abead7e01789",
         "category": "KPI",
     },
     {
-        "name": "KPOV Dashboard LB",
-        "url": "https://app.powerbi.com/groups/7a4cb31c-22df-4e29-943f-78786b635164/reports/471f112f-9dd3-4f49-89e2-0e76410b34f0/79ad63691290d5d21ea2?ctid=0e0f5bfc-3e6d-414f-8e75-abead7e01789&experience=power-bi&clientSideAuth=0",
+        "name": "KPOV_LB",
+        "url": "https://app.powerbi.com/reportEmbed?reportId=471f112f-9dd3-4f49-89e2-0e76410b34f0&autoAuth=true&ctid=0e0f5bfc-3e6d-414f-8e75-abead7e01789",
+        "category": "KPI",
+    },
+    {
+        "name": "KPOV_NDA",
+        "url": "https://app.powerbi.com/reportEmbed?reportId=68765000-e4f3-4a7b-af8d-346e9777be29&autoAuth=true&ctid=0e0f5bfc-3e6d-414f-8e75-abead7e01789",
         "category": "KPI",
     },
 ]
 
 DEFAULT_TV_REPORT_MAP = {
     "Ano Treatment": [
-        "Ano Dashboard 107 Application (Wet Lab Trend Charts)",
+        "Wet_Lab_Trends",
     ],
     "ACP3-ANOTV": [
-        "Ano Dashboard 105 Application",
+        "Ano_105",
     ],
     "Flash QDIM": [
-        "Ano Dashboard 106",
-        "Ano Live SCADA Temperature",
-        "KPIV Dashboard",
-        "KPOV Dashboard LB",
+        "Ano_106",
+        "Ano_107",
+        "Ano_Temperature",
+        "KPIV_Dash",
+        "KPOV_LB",
+        "KPOV_NDA",
     ],
+}
+
+LEGACY_POWERBI_REPORT_NAMES = {
+    "Ano Dashboard 105 Application": "Ano_105",
+    "Ano Dashboard 106": "Ano_106",
+    "Ano Dashboard 107 Application (Wet Lab Trend Charts)": "Wet_Lab_Trends",
+    "Ano Live SCADA Temperature": "Ano_Temperature",
+    "KPIV Dashboard": "KPIV_Dash",
+    "KPOV Dashboard LB": "KPOV_LB",
 }
 
 PERMISSION_LEVEL_OPTIONS = ["Admin", "Operator", "Viewer"]
@@ -364,17 +385,7 @@ def init_db():
             """,
             ("powerbi_embed_url", "", timestamp_now()),
         )
-    report_count = db.execute("SELECT COUNT(*) AS count FROM powerbi_reports").fetchone()["count"]
-    if report_count == 0:
-        now = timestamp_now()
-        for report in DEFAULT_POWERBI_REPORTS:
-            db.execute(
-                """
-                INSERT INTO powerbi_reports (name, url, category, is_active, created_at, updated_at)
-                VALUES (?, ?, ?, 1, ?, ?)
-                """,
-                (report["name"], report["url"], report["category"], now, now),
-            )
+    sync_default_powerbi_reports()
     seed_default_powerbi_assignments()
     db.commit()
 
@@ -687,14 +698,45 @@ def assign_reports_to_tv(tv_record_id, report_ids):
     db.commit()
 
 
+def sync_default_powerbi_reports():
+    db = get_db()
+    now = timestamp_now()
+    for legacy_name, new_name in LEGACY_POWERBI_REPORT_NAMES.items():
+        db.execute(
+            """
+            UPDATE powerbi_reports
+            SET name = ?, updated_at = ?
+            WHERE name = ?
+            """,
+            (new_name, now, legacy_name),
+        )
+
+    for report in DEFAULT_POWERBI_REPORTS:
+        existing = db.execute(
+            "SELECT id FROM powerbi_reports WHERE name = ?",
+            (report["name"],),
+        ).fetchone()
+        if existing:
+            db.execute(
+                """
+                UPDATE powerbi_reports
+                SET url = ?, category = ?, is_active = 1, updated_at = ?
+                WHERE id = ?
+                """,
+                (report["url"], report["category"], now, existing["id"]),
+            )
+        else:
+            db.execute(
+                """
+                INSERT INTO powerbi_reports (name, url, category, is_active, created_at, updated_at)
+                VALUES (?, ?, ?, 1, ?, ?)
+                """,
+                (report["name"], report["url"], report["category"], now, now),
+            )
+
+
 def seed_default_powerbi_assignments():
     db = get_db()
-    assignment_count = db.execute(
-        "SELECT COUNT(*) AS count FROM tv_report_assignments"
-    ).fetchone()["count"]
-    if assignment_count:
-        return
-
     reports = {
         row["name"]: row["id"]
         for row in db.execute("SELECT id, name FROM powerbi_reports WHERE is_active = 1").fetchall()
