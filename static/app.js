@@ -211,6 +211,131 @@
     );
   }
 
+  function initLiveBackground() {
+    const canvas = document.getElementById("liveBackgroundCanvas");
+    if (!canvas) return;
+
+    const context = canvas.getContext("2d");
+    if (!context) return;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const points = [];
+    let width = 0;
+    let height = 0;
+    let animationId = null;
+
+    function buildPoints() {
+      points.length = 0;
+      const targetCount = prefersReducedMotion
+        ? 0
+        : Math.max(16, Math.min(34, Math.floor((width * height) / 52000)));
+
+      for (let index = 0; index < targetCount; index += 1) {
+        points.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.22,
+          vy: (Math.random() - 0.5) * 0.22,
+          radius: 1.2 + Math.random() * 2.8,
+          pulse: Math.random() * Math.PI * 2,
+        });
+      }
+    }
+
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      context.setTransform(dpr, 0, 0, dpr, 0, 0);
+      buildPoints();
+    }
+
+    function drawConnections(palette) {
+      for (let i = 0; i < points.length; i += 1) {
+        for (let j = i + 1; j < points.length; j += 1) {
+          const a = points[i];
+          const b = points[j];
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          if (distance > 180) continue;
+          const alpha = (1 - distance / 180) * 0.18;
+          context.strokeStyle = palette.line.replace(")", `, ${alpha})`).replace("rgb", "rgba");
+          context.lineWidth = 1;
+          context.beginPath();
+          context.moveTo(a.x, a.y);
+          context.lineTo(b.x, b.y);
+          context.stroke();
+        }
+      }
+    }
+
+    function normalizeColor(color, alpha) {
+      if (color.startsWith("rgba(")) {
+        return color.replace(/rgba\(([^,]+),([^,]+),([^,]+),[^)]+\)/, `rgba($1,$2,$3,${alpha})`);
+      }
+      if (color.startsWith("rgb(")) {
+        return color.replace("rgb(", "rgba(").replace(")", `, ${alpha})`);
+      }
+      return color;
+    }
+
+    function animate() {
+      const palette = themePalette();
+      context.clearRect(0, 0, width, height);
+
+      const glowGradient = context.createLinearGradient(0, 0, width, height);
+      glowGradient.addColorStop(0, normalizeColor(palette.accent, 0.08));
+      glowGradient.addColorStop(0.5, normalizeColor(palette.accent2, 0.04));
+      glowGradient.addColorStop(1, normalizeColor(palette.warning, 0.04));
+      context.fillStyle = glowGradient;
+      context.fillRect(0, 0, width, height);
+
+      drawConnections(palette);
+
+      points.forEach((point, index) => {
+        point.x += point.vx;
+        point.y += point.vy;
+        point.pulse += 0.018 + index * 0.0004;
+
+        if (point.x <= -20 || point.x >= width + 20) point.vx *= -1;
+        if (point.y <= -20 || point.y >= height + 20) point.vy *= -1;
+
+        const radius = point.radius + Math.sin(point.pulse) * 0.7;
+        const halo = context.createRadialGradient(point.x, point.y, 0, point.x, point.y, radius * 8);
+        halo.addColorStop(0, normalizeColor(index % 3 === 0 ? palette.accent : palette.accent2, 0.28));
+        halo.addColorStop(1, "rgba(0, 0, 0, 0)");
+        context.fillStyle = halo;
+        context.beginPath();
+        context.arc(point.x, point.y, radius * 8, 0, Math.PI * 2);
+        context.fill();
+
+        context.fillStyle = index % 2 === 0 ? palette.accent : palette.accent2;
+        context.beginPath();
+        context.arc(point.x, point.y, Math.max(1.2, radius), 0, Math.PI * 2);
+        context.fill();
+      });
+
+      animationId = window.requestAnimationFrame(animate);
+    }
+
+    resize();
+    if (!prefersReducedMotion) {
+      animate();
+    }
+
+    window.addEventListener("resize", resize);
+    window.addEventListener("beforeunload", () => {
+      if (animationId) {
+        window.cancelAnimationFrame(animationId);
+      }
+    });
+  }
+
   function createStatusChip(label, variant, icon) {
     return `
       <span class="status-chip ${variant}">
@@ -344,4 +469,5 @@
 
   renderCharts();
   wireSpotlight();
+  initLiveBackground();
 })();

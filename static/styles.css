@@ -86,6 +86,11 @@ body {
   transition: background var(--transition-base), color var(--transition-base);
 }
 
+body > *:not(.live-background) {
+  position: relative;
+  z-index: 1;
+}
+
 body::before {
   content: "";
   position: fixed;
@@ -97,6 +102,52 @@ body::before {
   background-size: 42px 42px;
   opacity: 0.4;
   mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), transparent 95%);
+}
+
+.live-background {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.live-background-canvas,
+.live-background-grid,
+.live-background-scan {
+  position: absolute;
+  inset: 0;
+}
+
+.live-background-canvas {
+  width: 100%;
+  height: 100%;
+  opacity: 0.82;
+}
+
+.live-background-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.95), transparent 100%);
+  opacity: 0.55;
+}
+
+.live-background-scan {
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(99, 168, 255, 0.055) 50%, transparent 100%);
+  transform: translateY(-100%);
+  animation: liveScan 14s linear infinite;
+  opacity: 0.7;
+}
+
+.auth-body .live-background-canvas {
+  opacity: 0.94;
+}
+
+.auth-body .live-background-grid {
+  opacity: 0.7;
 }
 
 .app-shell {
@@ -1458,6 +1509,22 @@ html[data-theme="light"] .insight-pill span {
 
 .analytics-list-card.compact {
   padding: 12px 14px;
+}
+
+@keyframes liveScan {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live-background-scan {
+    animation: none;
+    display: none;
+  }
 }
 
 @media (max-width: 900px) {
