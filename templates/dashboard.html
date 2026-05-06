@@ -312,6 +312,18 @@
                               <div class="tv-cell">
                                 <strong>{{ record.content_name }}</strong>
                                 <span>{{ record.layout_composition }}</span>
+                                <div class="inventory-report-list">
+                                  {% set assigned_reports = reports_by_tv.get(record.id, []) %}
+                                  {% if assigned_reports %}
+                                    {% for report in assigned_reports %}
+                                      <a class="inventory-report-chip" href="{{ url_for('powerbi', tv=record.id, report=report.id) }}">
+                                        {{ report.name }}
+                                      </a>
+                                    {% endfor %}
+                                  {% else %}
+                                    <span class="inventory-report-empty">No Power BI report assigned</span>
+                                  {% endif %}
+                                </div>
                               </div>
                             </td>
                             <td>

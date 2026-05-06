@@ -223,6 +223,8 @@ def init_db():
         """
     )
 
+    db.execute("UPDATE users SET email = lower(email)")
+
     user_columns = {
         row["name"] for row in db.execute("PRAGMA table_info(users)").fetchall()
     }
@@ -295,27 +297,7 @@ def init_db():
         """
     )
 
-    user_count = db.execute("SELECT COUNT(*) AS count FROM users").fetchone()["count"]
-    if user_count == 0:
-        now = timestamp_now()
-        for user in DEFAULT_USERS:
-            db.execute(
-                """
-                INSERT INTO users (name, email, password_hash, role, permission_level, locations, is_active, created_at, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                (
-                    user["name"],
-                    user["email"],
-                    generate_password_hash(user["password"]),
-                    user["role"],
-                    user["permission_level"],
-                    user["locations"],
-                    user["is_active"],
-                    now,
-                    now,
-                ),
-            )
+    sync_default_users()
 
     tv_count = db.execute("SELECT COUNT(*) AS count FROM tv_records").fetchone()["count"]
     if tv_count == 0:
@@ -383,7 +365,10 @@ def serialize_locations(locations):
 def query_user_by_email(email):
     if not email:
         return None
-    return get_db().execute("SELECT * FROM users WHERE email = ?", (email,)).fetchone()
+    return get_db().execute(
+        "SELECT * FROM users WHERE lower(email) = ?",
+        (email.lower(),),
+    ).fetchone()
 
 
 def current_user():
@@ -628,6 +613,54 @@ def all_tv_records():
     db = get_db()
     rows = db.execute("SELECT * FROM tv_records ORDER BY tv_id").fetchall()
     return [dict(row) for row in rows]
+
+
+def sync_default_users():
+    db = get_db()
+    now = timestamp_now()
+    for user in DEFAULT_USERS:
+        normalized_email = user["email"].strip().lower()
+        existing = db.execute(
+            "SELECT id FROM users WHERE lower(email) = ?",
+            (normalized_email,),
+        ).fetchone()
+        if existing:
+            db.execute(
+                """
+                UPDATE users
+                SET name = ?, role = ?, permission_level = ?, locations = ?, is_active = ?, updated_at = ?, email = ?
+                WHERE id = ?
+                """,
+                (
+                    user["name"],
+                    user["role"],
+                    user["permission_level"],
+                    user["locations"],
+                    user["is_active"],
+                    now,
+                    normalized_email,
+                    existing["id"],
+                ),
+            )
+            continue
+
+        db.execute(
+            """
+            INSERT INTO users (name, email, password_hash, role, permission_level, locations, is_active, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                user["name"],
+                normalized_email,
+                generate_password_hash(user["password"]),
+                user["role"],
+                user["permission_level"],
+                user["locations"],
+                user["is_active"],
+                now,
+                now,
+            ),
+        )
 
 
 def all_powerbi_reports():

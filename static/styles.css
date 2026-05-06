@@ -992,6 +992,39 @@ html[data-theme="light"] .insight-pill span {
   gap: 6px;
 }
 
+.inventory-report-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.inventory-report-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--blue-soft);
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-size: 0.76rem;
+  text-decoration: none;
+  transition:
+    transform var(--transition-base),
+    border-color var(--transition-base),
+    background var(--transition-base);
+}
+
+.inventory-report-chip:hover {
+  transform: translateY(-1px);
+  border-color: rgba(82, 140, 255, 0.32);
+}
+
+.inventory-report-empty {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
 .tv-cell strong {
   color: var(--text);
 }
@@ -1132,6 +1165,17 @@ html[data-theme="light"] .insight-pill span {
   backdrop-filter: blur(20px);
 }
 
+.modal-dialog-scrollable .modal-content {
+  max-height: 92vh;
+}
+
+.app-modal .modal-body {
+  max-height: calc(92vh - 140px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 20px;
+}
+
 .modal-header,
 .modal-footer {
   border-color: var(--line);
@@ -1263,6 +1307,9 @@ html[data-theme="light"] .insight-pill span {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 16px;
+  max-height: 520px;
+  overflow-y: auto;
+  padding-right: 8px;
 }
 
 .powerbi-tv-card {
