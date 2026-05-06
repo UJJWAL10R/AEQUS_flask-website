@@ -144,32 +144,32 @@ DEFAULT_TV_RECORDS = [
 DEFAULT_POWERBI_REPORTS = [
     {
         "name": "Ano Dashboard 105 Application",
-        "url": "https://app.powerbi.com/groups/07228872-ff92-42d9-ab91-1116ce17b076/reports/a3530cdb-548b-45d5-a1b8-2747c4f4ba26/4cfea5d3771eeb47ab10?experience=power-bi",
+        "url": "https://app.powerbi.com/groups/07228872-ff92-42d9-ab91-1116ce17b076/reports/a3530cdb-548b-45d5-a1b8-2747c4f4ba26/4cfea5d3771eeb47ab10?experience=power-bi&clientSideAuth=0",
         "category": "ANO",
     },
     {
         "name": "Ano Dashboard 106",
-        "url": "https://app.powerbi.com/groups/07228872-ff92-42d9-ab91-1116ce17b076/reports/80a1cd94-2f47-413f-82b1-0925b041fac6/5120bdcaab3f36cf94de?experience=power-bi",
+        "url": "https://app.powerbi.com/groups/07228872-ff92-42d9-ab91-1116ce17b076/reports/80a1cd94-2f47-413f-82b1-0925b041fac6/5120bdcaab3f36cf94de?experience=power-bi&clientSideAuth=0",
         "category": "ANO",
     },
     {
         "name": "Ano Dashboard 107 Application (Wet Lab Trend Charts)",
-        "url": "https://app.powerbi.com/groups/07228872-ff92-42d9-ab91-1116ce17b076/reports/b9fddd4d-e63d-408c-9317-8ad0730ad937/bdab09556340317bada0?experience=power-bi",
+        "url": "https://app.powerbi.com/groups/07228872-ff92-42d9-ab91-1116ce17b076/reports/b9fddd4d-e63d-408c-9317-8ad0730ad937/bdab09556340317bada0?experience=power-bi&clientSideAuth=0",
         "category": "ANO",
     },
     {
         "name": "Ano Live SCADA Temperature",
-        "url": "https://app.powerbi.com/groups/07228872-ff92-42d9-ab91-1116ce17b076/reports/853d542c-b72f-4d36-aa28-45223f1f9bd4/72b441b7a5f19cf346a9?experience=power-bi",
+        "url": "https://app.powerbi.com/groups/07228872-ff92-42d9-ab91-1116ce17b076/reports/853d542c-b72f-4d36-aa28-45223f1f9bd4/72b441b7a5f19cf346a9?experience=power-bi&clientSideAuth=0",
         "category": "SCADA",
     },
     {
         "name": "KPIV Dashboard",
-        "url": "https://app.powerbi.com/groups/07228872-ff92-42d9-ab91-1116ce17b076/reports/13431330-2de8-4726-9930-12f11e8509e6/b6cf6b04699c30656495?experience=power-bi",
+        "url": "https://app.powerbi.com/groups/07228872-ff92-42d9-ab91-1116ce17b076/reports/13431330-2de8-4726-9930-12f11e8509e6/b6cf6b04699c30656495?experience=power-bi&clientSideAuth=0",
         "category": "KPI",
     },
     {
         "name": "KPOV Dashboard LB",
-        "url": "https://app.powerbi.com/groups/7a4cb31c-22df-4e29-943f-78786b635164/reports/471f112f-9dd3-4f49-89e2-0e76410b34f0/79ad63691290d5d21ea2?ctid=0e0f5bfc-3e6d-414f-8e75-abead7e01789&experience=power-bi",
+        "url": "https://app.powerbi.com/groups/7a4cb31c-22df-4e29-943f-78786b635164/reports/471f112f-9dd3-4f49-89e2-0e76410b34f0/79ad63691290d5d21ea2?ctid=0e0f5bfc-3e6d-414f-8e75-abead7e01789&experience=power-bi&clientSideAuth=0",
         "category": "KPI",
     },
 ]
