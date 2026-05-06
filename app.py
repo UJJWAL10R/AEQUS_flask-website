@@ -35,7 +35,7 @@ DEFAULT_USERS = [
     {
         "name": "Jaysinh Chavda",
         "email": "Jaysinh.Chavda@aequs.com",
-        "password": "jc-14724",
+        "password": "14724",
         "role": "Management Trainee",
         "permission_level": "Viewer",
         "locations": "ALL",
