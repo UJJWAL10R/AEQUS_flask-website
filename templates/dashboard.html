@@ -245,7 +245,7 @@
           <a href="{{ url_for('analytics') }}" class="secondary-btn">Open analytics workspace</a>
         </div>
       </div>
-      <section class="content-grid">
+      <section class="content-grid {% if not user.is_admin %}viewer-full-width{% endif %}">
             <div class="main-column">
               <section class="panel-surface panel-block panel-nested reveal reveal-delay-2">
                 <div class="panel-header">

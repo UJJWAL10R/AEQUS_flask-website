@@ -526,6 +526,8 @@ def build_analytics(rows):
         "template_types": build_distribution(rows, "template_type"),
         "content_types": content_types,
         "layout_types": build_distribution(rows, "layout_composition"),
+        "deploy_status": build_distribution(rows, "deployed_status"),
+        "content_names": build_distribution(rows, "content_name"),
     }
 
 
@@ -568,6 +570,41 @@ def dashboard_context(user, query="", status="all"):
     tv_ids = [row["id"] for row in rows]
     mapped_tv_ids = sorted({*tv_ids, *[record["id"] for record in admin_records]})
     reports_by_tv = assigned_reports_for_tvs(mapped_tv_ids)
+    report_coverage = {
+        "Assigned": sum(1 for row in rows if reports_by_tv.get(row["id"])),
+        "Unassigned": sum(1 for row in rows if not reports_by_tv.get(row["id"])),
+    }
+    analytics["report_coverage"] = report_coverage
+    analytics["report_volume"] = {
+        row["tv_id"]: len(reports_by_tv.get(row["id"], []))
+        for row in rows
+    }
+    analytics["attention_items"] = [
+        {
+            "tv_id": row["tv_id"],
+            "location": row["location"],
+            "status": row["tv_status"],
+            "ping_status": row["ping_status"],
+            "deployed_status": row["deployed_status"],
+            "remarks": row["remarks"],
+            "report_count": len(reports_by_tv.get(row["id"], [])),
+        }
+        for row in rows
+        if row["tv_status"] != "ONLINE"
+        or row["ping_status"] != "PING REQUEST"
+        or row["deployed_status"] != "Deployed"
+        or not reports_by_tv.get(row["id"])
+    ]
+    analytics["recent_matrix"] = [
+        {
+            "tv_id": row["tv_id"],
+            "content_name": row["content_name"],
+            "last_online": row["last_online"],
+            "last_ping_time": row["last_ping_time"],
+            "report_count": len(reports_by_tv.get(row["id"], [])),
+        }
+        for row in rows
+    ]
 
     return {
         "user": user,

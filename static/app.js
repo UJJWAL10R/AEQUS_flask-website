@@ -165,6 +165,50 @@
         borderColor: palette.accent2,
       }
     );
+
+    createChart(
+      "deployStatusChart",
+      "doughnut",
+      Object.keys(analytics.deploy_status || {}),
+      Object.values(analytics.deploy_status || {}),
+      {
+        backgroundColor: [palette.success, palette.warning, palette.danger, palette.accent],
+      }
+    );
+
+    createChart(
+      "reportCoverageChart",
+      "pie",
+      Object.keys(analytics.report_coverage || {}),
+      Object.values(analytics.report_coverage || {}),
+      {
+        backgroundColor: [palette.accent, palette.danger],
+      }
+    );
+
+    createChart(
+      "reportVolumeChart",
+      "bar",
+      Object.keys(analytics.report_volume || {}),
+      Object.values(analytics.report_volume || {}),
+      {
+        label: "Reports assigned",
+        backgroundColor: palette.success,
+        borderColor: palette.success,
+      }
+    );
+
+    createChart(
+      "contentNameChart",
+      "bar",
+      Object.keys(analytics.content_names || {}),
+      Object.values(analytics.content_names || {}),
+      {
+        label: "Content count",
+        backgroundColor: palette.warning,
+        borderColor: palette.warning,
+      }
+    );
   }
 
   function createStatusChip(label, variant, icon) {

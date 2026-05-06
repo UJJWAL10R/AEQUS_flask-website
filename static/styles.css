@@ -908,6 +908,10 @@ html[data-theme="light"] .insight-pill span {
   gap: 18px;
 }
 
+.content-grid.viewer-full-width {
+  grid-template-columns: minmax(0, 1fr);
+}
+
 .panel-nested {
   background: rgba(255, 255, 255, 0.02);
 }
@@ -1255,12 +1259,22 @@ html[data-theme="light"] .insight-pill span {
   animation: floatIn 0.75s ease forwards;
 }
 
+.analytics-card-wide {
+  grid-column: span 2;
+}
+
 .chart-stage {
   position: relative;
   height: 280px;
   min-height: 280px;
   max-height: 280px;
   overflow: hidden;
+}
+
+.chart-stage-tall {
+  height: 340px;
+  min-height: 340px;
+  max-height: 340px;
 }
 
 .powerbi-shell {
@@ -1305,16 +1319,18 @@ html[data-theme="light"] .insight-pill span {
 
 .powerbi-tv-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 16px;
-  max-height: 520px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  max-height: 420px;
   overflow-y: auto;
   padding-right: 8px;
 }
 
 .powerbi-tv-card {
-  min-height: 220px;
+  min-height: 0;
+  padding: 14px;
   align-content: start;
+  gap: 10px;
 }
 
 .selected-tv-badge {
@@ -1339,6 +1355,12 @@ html[data-theme="light"] .insight-pill span {
 .spotlight-report-list {
   display: grid;
   gap: 8px;
+}
+
+.powerbi-tv-card .report-link-stack {
+  max-height: 180px;
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
 .report-link,
@@ -1387,6 +1409,38 @@ html[data-theme="light"] .insight-pill span {
 
 .insight-pill-wide {
   grid-column: span 2;
+}
+
+.analytics-list-shell {
+  display: grid;
+  gap: 12px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.analytics-list-card {
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: var(--surface-muted);
+  border: 1px solid var(--line);
+}
+
+.analytics-list-card strong {
+  color: var(--text);
+}
+
+.analytics-list-card span,
+.analytics-list-card small,
+.analytics-list-card p {
+  color: var(--muted);
+  margin: 0;
+}
+
+.analytics-list-card.compact {
+  padding: 12px 14px;
 }
 
 @media (max-width: 900px) {
