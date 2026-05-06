@@ -226,10 +226,10 @@
 
     function livePalette(palette) {
       return {
-        primary: "#2f5fe9",
-        secondary: "#2746b7",
-        tertiary: "#1a2f7a",
-        line: normalizeColor("#2f5fe9", 0.08),
+        primary: "#17306f",
+        secondary: "#10224f",
+        tertiary: "#09122b",
+        line: normalizeColor("#17306f", 0.06),
       };
     }
 
@@ -299,9 +299,9 @@
       context.clearRect(0, 0, width, height);
 
       const glowGradient = context.createLinearGradient(0, 0, width, height);
-      glowGradient.addColorStop(0, normalizeColor(colors.primary, 0.08));
-      glowGradient.addColorStop(0.5, normalizeColor(colors.secondary, 0.045));
-      glowGradient.addColorStop(1, normalizeColor(colors.tertiary, 0.04));
+      glowGradient.addColorStop(0, normalizeColor(colors.primary, 0.06));
+      glowGradient.addColorStop(0.5, normalizeColor(colors.secondary, 0.035));
+      glowGradient.addColorStop(1, normalizeColor(colors.tertiary, 0.08));
       context.fillStyle = glowGradient;
       context.fillRect(0, 0, width, height);
 
@@ -317,7 +317,7 @@
 
         const radius = point.radius + Math.sin(point.pulse) * 0.7;
         const halo = context.createRadialGradient(point.x, point.y, 0, point.x, point.y, radius * 8);
-        halo.addColorStop(0, normalizeColor(index % 3 === 0 ? colors.primary : colors.secondary, 0.12));
+        halo.addColorStop(0, normalizeColor(index % 3 === 0 ? colors.primary : colors.secondary, 0.08));
         halo.addColorStop(1, "rgba(0, 0, 0, 0)");
         context.fillStyle = halo;
         context.beginPath();

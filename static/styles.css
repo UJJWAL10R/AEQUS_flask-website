@@ -122,42 +122,42 @@ body::before {
 .live-background-canvas {
   width: 100%;
   height: 100%;
-  opacity: 0.3;
-  filter: blur(1px);
+  opacity: 0.22;
+  filter: blur(1.4px);
 }
 
 .live-background-grid {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.012) 1px, transparent 1px);
+    linear-gradient(rgba(40, 72, 145, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(40, 72, 145, 0.04) 1px, transparent 1px);
   background-size: 96px 96px;
   mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.95), transparent 100%);
-  opacity: 0.18;
+  opacity: 0.12;
 }
 
 .live-background-scan {
   background:
-    linear-gradient(180deg, transparent 0%, rgba(34, 76, 178, 0.09) 50%, transparent 100%);
+    linear-gradient(180deg, transparent 0%, rgba(11, 25, 71, 0.16) 48%, rgba(18, 39, 108, 0.2) 52%, transparent 100%);
   transform: translateY(-100%);
-  animation: liveScan 20s linear infinite;
-  opacity: 0.32;
+  animation: liveScan 24s linear infinite;
+  opacity: 0.22;
 }
 
 .auth-body .live-background-canvas {
-  opacity: 0.4;
+  opacity: 0.28;
 }
 
 .auth-body .live-background-grid {
-  opacity: 0.22;
+  opacity: 0.14;
 }
 
 .dashboard-shell .live-background-canvas,
 body:not(.auth-body) .live-background-canvas {
-  opacity: 0.22;
+  opacity: 0.16;
 }
 
 body:not(.auth-body) .live-background-scan {
-  opacity: 0.18;
+  opacity: 0.14;
 }
 
 .app-shell {
