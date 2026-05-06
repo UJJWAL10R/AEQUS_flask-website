@@ -24,6 +24,15 @@ app.config["DATABASE"] = os.getenv(
 DEFAULT_USERS = [
 
     {
+        "name": "Dash User",
+        "email": "dash.user@aequs.com",
+        "password": "Aequs@2026",
+        "role": "Dashboard User",
+        "permission_level": "Viewer",
+        "locations": "ALL",
+        "is_active": 1,
+    },
+    {
         "name": "Ujjwal Rajpal",
         "email": "ujjwal.rajpal@aequs.com",
         "password": "ujjwal10R@",
