@@ -43,6 +43,27 @@
       </article>
     </section>
 
+    <section class="panel-surface panel-block panel-nested reveal reveal-delay-1">
+      <div class="panel-header stacked">
+        <div>
+          <p class="eyebrow">Power BI Library</p>
+          <h3>All available embedded reports</h3>
+        </div>
+      </div>
+
+      <div class="powerbi-library-grid">
+        {% for report in powerbi_reports %}
+          <a
+            href="{{ url_for('powerbi', report=report.id) }}"
+            class="report-link {% if selected_report_id == report.id %}active{% endif %}"
+          >
+            {{ report.name }}
+            <small>{{ report.category }}</small>
+          </a>
+        {% endfor %}
+      </div>
+    </section>
+
     {% if user.is_admin %}
       <section class="panel-surface panel-block reveal reveal-delay-1">
         <div class="panel-header">

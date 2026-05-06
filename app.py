@@ -69,12 +69,12 @@ DEFAULT_TV_RECORDS = [
         "remarks": "Healthy screen and current content synced.",
     },
     {
-        "tv_id": "ACP3-ANOTV",
-        "location": "ANO (Floor Side)",
-        "content_name": "ANO_DAILY_UPDATES (KPOV-LB, KPIV-S1, ANO106, ANO-Temp)",
+        "tv_id": "ACP3-TV30",
+        "location": "ANO (SCADA)",
+        "content_name": "ANO_DAILY_UPDATES (ANO-106)",
         "template_type": "PICKCELL",
         "layout_composition": "Full Screen",
-        "deployed_date": "29-Apr-2026",
+        "deployed_date": "06-May-2026",
         "deployed_time": "11:10 AM",
         "tv_status": "ONLINE",
         "last_online": "Today",
@@ -84,19 +84,49 @@ DEFAULT_TV_RECORDS = [
         "remarks": "Healthy screen and current content synced.",
     },
     {
-        "tv_id": "Flash QDIM",
-        "location": "ANO (Floor Side)",
-        "content_name": "AIO (KPOV-LB, KPIV-S1, ANO106, ANO-Temp)",
+        "tv_id": "ACP3-TV20",
+        "location": "ANO (SCADA 2)",
+        "content_name": "ACT (KPOV-NDA, KPIV-S1, ANO-Temp)",
         "template_type": "PICKCELL",
-        "layout_composition": "4 Layout Screen",
-        "deployed_date": "23-Apr-2026",
+        "layout_composition": "Full Screen",
+        "deployed_date": "06-May-2026",
         "deployed_time": "04:15 PM",
-        "tv_status": "OFFLINE",
-        "last_online": "5 Days Ago",
+        "tv_status": "ONLINE",
+        "last_online": "Today",
         "ping_status": "PING REQUEST",
         "last_ping_time": "09:58 AM",
         "deployed_status": "Deployed",
-        "remarks": "Intermittent panel signal under observation.",
+        "remarks": "Healthy screen and current content synced.",
+    },
+    {
+        "tv_id": "ACP3-TV10",
+        "location": "ANO (SCADA 3)",
+        "content_name": "ACT (Ano Control Tower)",
+        "template_type": "PICKCELL",
+        "layout_composition": "Full Screen",
+        "deployed_date": "06-May-2026",
+        "deployed_time": "04:15 PM",
+        "tv_status": "ONLINE",
+        "last_online": "Today",
+        "ping_status": "PING REQUEST",
+        "last_ping_time": "09:58 AM",
+        "deployed_status": "Deployed",
+        "remarks": "Healthy screen and current content synced.",
+    },
+    {
+        "tv_id": "ACP3-TV15",
+        "location": "FLASH CNC",
+        "content_name": "QDIM (Quality Dashboard)",
+        "template_type": "PICKCELL",
+        "layout_composition": "Full Screen",
+        "deployed_date": "06-May-2026",
+        "deployed_time": "04:15 PM",
+        "tv_status": "ONLINE",
+        "last_online": "Today",
+        "ping_status": "PING REQUEST",
+        "last_ping_time": "09:58 AM",
+        "deployed_status": "Deployed",
+        "remarks": "Healthy screen and current content synced.",
     },
     {
         "tv_id": "Assembly - OQC",
@@ -107,11 +137,11 @@ DEFAULT_TV_RECORDS = [
         "deployed_date": "03-Apr-2026",
         "deployed_time": "10:00 AM",
         "tv_status": "OFFLINE",
-        "last_online": "26 Days Ago",
+        "last_online": "29 Days Ago",
         "ping_status": "PING REQUEST",
         "last_ping_time": "10:34 AM",
         "deployed_status": "Deployed",
-        "remarks": "Awaiting line-sides hardware inspection.",
+        "remarks": "Pickcel is Inactive.",
     },
 ]
 
@@ -162,17 +192,14 @@ DEFAULT_TV_REPORT_MAP = {
     "Ano Treatment": [
         "Wet_Lab_Trends",
     ],
-    "ACP3-ANOTV": [
-        "Ano_105",
-    ],
-    "Flash QDIM": [
+    "ACP3-TV30": [
         "Ano_106",
-        "Ano_107",
+    ],
+    "ACP3-TV20": [
         "Ano_Temperature",
         "KPIV_Dash",
-        "KPOV_LB",
         "KPOV_NDA",
-    ],
+    ]
 }
 
 LEGACY_POWERBI_REPORT_NAMES = {
@@ -890,6 +917,12 @@ def powerbi():
     selected_report_id = request.args.get("report", type=int)
     selected_embed = ""
     selected_report_name = ""
+    all_reports = {report["id"]: report for report in context["powerbi_reports"]}
+
+    if selected_report_id and selected_report_id in all_reports:
+        selected_report = all_reports[selected_report_id]
+        selected_embed = selected_report["url"]
+        selected_report_name = selected_report["name"]
 
     if grouped_reports:
         if selected_tv_id is None:
@@ -900,7 +933,7 @@ def powerbi():
         )
         selected_tv_id = selected_group["tv"]["id"]
         reports = selected_group["reports"]
-        if reports:
+        if reports and not selected_embed:
             selected_report = next(
                 (report for report in reports if report["id"] == selected_report_id),
                 reports[0],
