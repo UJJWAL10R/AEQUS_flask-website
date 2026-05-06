@@ -77,7 +77,7 @@ DEFAULT_USERS = [
         "is_active": 1,
     },
 ]
-
+ 
 DEFAULT_TV_RECORDS = [
     {
         "tv_id": "Ano Treatment",
@@ -97,17 +97,17 @@ DEFAULT_TV_RECORDS = [
     {
         "tv_id": "ACP3-ANOTV",
         "location": "ANO (Floor Side)",
-        "content_name": "ANO_DAILY_UPDATES",
+        "content_name": "ANO_DAILY_UPDATES (KPOV-LB, KPIV-S1, ANO106, ANO-Temp)",
         "template_type": "PICKCELL",
         "layout_composition": "Full Screen",
-        "deployed_date": "23-Apr-2026",
-        "deployed_time": "11:40 AM",
-        "tv_status": "OFFLINE",
-        "last_online": "1 Day Ago",
+        "deployed_date": "29-Apr-2026",
+        "deployed_time": "11:10 AM",
+        "tv_status": "ONLINE",
+        "last_online": "Today",
         "ping_status": "PING REQUEST",
-        "last_ping_time": "10:33 AM",
+        "last_ping_time": "10:36 AM",
         "deployed_status": "Deployed",
-        "remarks": "Power cycle recommended.",
+        "remarks": "Healthy screen and current content synced.",
     },
     {
         "tv_id": "Flash QDIM",
@@ -118,7 +118,7 @@ DEFAULT_TV_RECORDS = [
         "deployed_date": "23-Apr-2026",
         "deployed_time": "04:15 PM",
         "tv_status": "OFFLINE",
-        "last_online": "Today",
+        "last_online": "5 Days Ago",
         "ping_status": "PING REQUEST",
         "last_ping_time": "09:58 AM",
         "deployed_status": "Deployed",
@@ -133,11 +133,11 @@ DEFAULT_TV_RECORDS = [
         "deployed_date": "03-Apr-2026",
         "deployed_time": "10:00 AM",
         "tv_status": "OFFLINE",
-        "last_online": "20 Days Ago",
+        "last_online": "26 Days Ago",
         "ping_status": "PING REQUEST",
         "last_ping_time": "10:34 AM",
         "deployed_status": "Deployed",
-        "remarks": "Awaiting line-side hardware inspection.",
+        "remarks": "Awaiting line-sides hardware inspection.",
     },
 ]
 
