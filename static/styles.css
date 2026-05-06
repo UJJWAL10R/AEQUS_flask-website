@@ -137,10 +137,10 @@ body::before {
 
 .live-background-scan {
   background:
-    linear-gradient(180deg, transparent 0%, rgba(84, 150, 255, 0.03) 50%, transparent 100%);
+    linear-gradient(180deg, transparent 0%, rgba(34, 76, 178, 0.09) 50%, transparent 100%);
   transform: translateY(-100%);
   animation: liveScan 20s linear infinite;
-  opacity: 0.28;
+  opacity: 0.32;
 }
 
 .auth-body .live-background-canvas {

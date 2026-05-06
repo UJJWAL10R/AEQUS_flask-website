@@ -226,10 +226,10 @@
 
     function livePalette(palette) {
       return {
-        primary: palette.accent,
-        secondary: "#7aa2ff",
-        tertiary: "#4f7cff",
-        line: normalizeColor(palette.accent, 0.08),
+        primary: "#2f5fe9",
+        secondary: "#2746b7",
+        tertiary: "#1a2f7a",
+        line: normalizeColor("#2f5fe9", 0.08),
       };
     }
 
