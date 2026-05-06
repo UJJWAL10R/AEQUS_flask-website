@@ -21,81 +21,88 @@
       </article>
     </section>
 
-    <section class="content-grid reveal reveal-delay-2">
-      <aside class="side-column">
-        <section class="panel-surface panel-block panel-nested">
-          <div class="panel-header stacked">
-            <div>
-              <p class="eyebrow">TV Mapping</p>
-              <h3>Public report access</h3>
-            </div>
+    <section class="reveal reveal-delay-2">
+      <section class="panel-surface panel-block powerbi-shell powerbi-hero-layout">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Embedded Report</p>
+            <h3>{{ selected_report_name or "Public Power BI content" }}</h3>
           </div>
-
-          <div class="user-list">
+          {% if selected_tv_id %}
             {% for group in grouped_reports %}
-              <article class="user-card">
-                <div>
+              {% if group.tv.id == selected_tv_id %}
+                <div class="selected-tv-badge">
+                  <span class="eyebrow">Selected TV</span>
                   <strong>{{ group.tv.tv_id }}</strong>
-                  <span>{{ group.tv.location }}</span>
+                  <small>{{ group.tv.location }}</small>
                 </div>
-
-                {% if group.reports %}
-                  <div class="report-link-stack">
-                    {% for report in group.reports %}
-                      <a
-                        href="{{ url_for('powerbi_public', tv=group.tv.id, report=report.id) }}"
-                        class="report-link {% if selected_tv_id == group.tv.id and selected_report_id == report.id %}active{% endif %}"
-                      >
-                        {{ report.name }}
-                        <small>{{ report.category }}</small>
-                      </a>
-                    {% endfor %}
-                  </div>
-                {% else %}
-                  <p class="subtle-note">No public report assigned yet.</p>
-                {% endif %}
-              </article>
+              {% endif %}
             {% endfor %}
-          </div>
-        </section>
-      </aside>
-
-      <div class="main-column">
-        <section class="panel-surface panel-block powerbi-shell">
-          <div class="panel-header">
-            <div>
-              <p class="eyebrow">Embedded Report</p>
-              <h3>{{ selected_report_name or "Public Power BI content" }}</h3>
-            </div>
-          </div>
-
-          {% if selected_embed %}
-            <div class="powerbi-frame-wrap">
-              <iframe
-                src="{{ selected_embed }}"
-                title="{{ selected_report_name or 'AEQUS Power BI public report' }}"
-                class="powerbi-frame"
-                loading="lazy"
-                allowfullscreen
-              ></iframe>
-            </div>
-          {% elif powerbi_embed_url %}
-            <div class="powerbi-frame-wrap">
-              <iframe
-                src="{{ powerbi_embed_url }}"
-                title="AEQUS Power BI public fallback report"
-                class="powerbi-frame"
-                loading="lazy"
-                allowfullscreen
-              ></iframe>
-            </div>
-          {% else %}
-            <div class="empty-state">
-              No public Power BI report has been configured yet.
-            </div>
           {% endif %}
-        </section>
-      </div>
+        </div>
+
+        {% if selected_embed %}
+          <div class="powerbi-frame-wrap powerbi-frame-wrap-wide">
+            <iframe
+              src="{{ selected_embed }}"
+              title="{{ selected_report_name or 'AEQUS Power BI public report' }}"
+              class="powerbi-frame powerbi-frame-wide"
+              loading="lazy"
+              allowfullscreen
+            ></iframe>
+          </div>
+        {% elif powerbi_embed_url %}
+          <div class="powerbi-frame-wrap powerbi-frame-wrap-wide">
+            <iframe
+              src="{{ powerbi_embed_url }}"
+              title="AEQUS Power BI public fallback report"
+              class="powerbi-frame powerbi-frame-wide"
+              loading="lazy"
+              allowfullscreen
+            ></iframe>
+          </div>
+        {% else %}
+          <div class="empty-state">
+            No public Power BI report has been configured yet.
+          </div>
+        {% endif %}
+      </section>
+
+      <section class="panel-surface panel-block panel-nested powerbi-map-section">
+        <div class="panel-header stacked">
+          <div>
+            <p class="eyebrow">TV Mapping</p>
+            <h3>Public report access</h3>
+          </div>
+        </div>
+
+        <div class="powerbi-tv-grid">
+          {% for group in grouped_reports %}
+            <article class="user-card powerbi-tv-card">
+              <div>
+                <strong>{{ group.tv.tv_id }}</strong>
+                <span>{{ group.tv.location }}</span>
+              </div>
+
+              {% if group.reports %}
+                <div class="report-link-stack">
+                  {% for report in group.reports %}
+                    <a
+                      href="{{ url_for('powerbi_public', tv=group.tv.id, report=report.id) }}"
+                      class="report-link {% if selected_tv_id == group.tv.id and selected_report_id == report.id %}active{% endif %}"
+                    >
+                      {{ report.name }}
+                      <small>{{ report.category }}</small>
+                    </a>
+                  {% endfor %}
+                </div>
+              {% else %}
+                <p class="subtle-note">No public report assigned yet.</p>
+              {% endif %}
+            </article>
+          {% endfor %}
+        </div>
+      </section>
     </section>
   </div>
 {% endblock %}

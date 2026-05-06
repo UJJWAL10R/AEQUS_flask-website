@@ -1240,6 +1240,54 @@ html[data-theme="light"] .insight-pill span {
   display: block;
 }
 
+.powerbi-hero-layout {
+  display: grid;
+  gap: 22px;
+}
+
+.powerbi-frame-wrap-wide {
+  min-height: 82vh;
+}
+
+.powerbi-frame-wide {
+  height: 82vh;
+  min-height: 760px;
+  max-height: 1100px;
+}
+
+.powerbi-map-section {
+  margin-top: 22px;
+}
+
+.powerbi-tv-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.powerbi-tv-card {
+  min-height: 220px;
+  align-content: start;
+}
+
+.selected-tv-badge {
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: 20px;
+  background: var(--surface-muted);
+  border: 1px solid var(--line);
+  text-align: right;
+}
+
+.selected-tv-badge strong {
+  color: var(--text);
+}
+
+.selected-tv-badge small {
+  color: var(--muted);
+}
+
 .report-link-stack,
 .spotlight-report-list {
   display: grid;
@@ -1292,6 +1340,21 @@ html[data-theme="light"] .insight-pill span {
 
 .insight-pill-wide {
   grid-column: span 2;
+}
+
+@media (max-width: 900px) {
+  .powerbi-frame-wrap-wide {
+    min-height: 68vh;
+  }
+
+  .powerbi-frame-wide {
+    height: 68vh;
+    min-height: 560px;
+  }
+
+  .selected-tv-badge {
+    text-align: left;
+  }
 }
 
 .tv-screen[data-status="ONLINE"] {
