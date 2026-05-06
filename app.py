@@ -22,33 +22,7 @@ app.config["DATABASE"] = os.getenv(
 )
 
 DEFAULT_USERS = [
-    {
-        "name": "System Admin",
-        "email": "admin@tvstatus.local",
-        "password": "Admin@123",
-        "role": "Admin",
-        "permission_level": "Admin",
-        "locations": "ALL",
-        "is_active": 1,
-    },
-    {
-        "name": "ANO Operations",
-        "email": "ano.ops@tvstatus.local",
-        "password": "Ano@123",
-        "role": "Operator",
-        "permission_level": "Operator",
-        "locations": "LE (Mounted),ANO (Floor Side)",
-        "is_active": 1,
-    },
-    {
-        "name": "Assembly Viewer",
-        "email": "assembly.viewer@tvstatus.local",
-        "password": "View@123",
-        "role": "Viewer",
-        "permission_level": "Viewer",
-        "locations": "Assembly",
-        "is_active": 1,
-    },
+
     {
         "name": "Ujjwal Rajpal",
         "email": "ujjwal.rajpal@aequs.com",
@@ -63,7 +37,7 @@ DEFAULT_USERS = [
         "email": "Jaysinh.Chavda@aequs.com",
         "password": "jc-14724",
         "role": "Management Trainee",
-        "permission_level": "Admin",
+        "permission_level": "Viewer",
         "locations": "ALL",
         "is_active": 1,
     },
@@ -72,7 +46,7 @@ DEFAULT_USERS = [
         "email": "Mohita.Chandiramani@aequs.com",
         "password": "15374",
         "role": "Manager",
-        "permission_level": "Admin",
+        "permission_level": "Viewer",
         "locations": "ALL",
         "is_active": 1,
     },
