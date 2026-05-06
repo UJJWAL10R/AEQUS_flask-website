@@ -228,15 +228,15 @@
       points.length = 0;
       const targetCount = prefersReducedMotion
         ? 0
-        : Math.max(16, Math.min(34, Math.floor((width * height) / 52000)));
+        : Math.max(10, Math.min(22, Math.floor((width * height) / 90000)));
 
       for (let index = 0; index < targetCount; index += 1) {
         points.push({
           x: Math.random() * width,
           y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.22,
-          vy: (Math.random() - 0.5) * 0.22,
-          radius: 1.2 + Math.random() * 2.8,
+          vx: (Math.random() - 0.5) * 0.12,
+          vy: (Math.random() - 0.5) * 0.12,
+          radius: 1 + Math.random() * 2.1,
           pulse: Math.random() * Math.PI * 2,
         });
       }
@@ -262,8 +262,8 @@
           const dx = a.x - b.x;
           const dy = a.y - b.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
-          if (distance > 180) continue;
-          const alpha = (1 - distance / 180) * 0.18;
+          if (distance > 160) continue;
+          const alpha = (1 - distance / 160) * 0.08;
           context.strokeStyle = palette.line.replace(")", `, ${alpha})`).replace("rgb", "rgba");
           context.lineWidth = 1;
           context.beginPath();
@@ -300,14 +300,14 @@
       points.forEach((point, index) => {
         point.x += point.vx;
         point.y += point.vy;
-        point.pulse += 0.018 + index * 0.0004;
+        point.pulse += 0.01 + index * 0.0002;
 
         if (point.x <= -20 || point.x >= width + 20) point.vx *= -1;
         if (point.y <= -20 || point.y >= height + 20) point.vy *= -1;
 
         const radius = point.radius + Math.sin(point.pulse) * 0.7;
         const halo = context.createRadialGradient(point.x, point.y, 0, point.x, point.y, radius * 8);
-        halo.addColorStop(0, normalizeColor(index % 3 === 0 ? palette.accent : palette.accent2, 0.28));
+        halo.addColorStop(0, normalizeColor(index % 3 === 0 ? palette.accent : palette.accent2, 0.12));
         halo.addColorStop(1, "rgba(0, 0, 0, 0)");
         context.fillStyle = halo;
         context.beginPath();
